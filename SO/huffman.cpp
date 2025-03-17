@@ -1,6 +1,11 @@
 #include "huffman.h"
 
-HuffmanNode::HuffmanNode(char data, int freq) : data(data), freq(freq), left(nullptr), right(nullptr) {}
+HuffmanNode::HuffmanNode(char data, int freq){
+    this->data = data;
+    this->freq = freq;
+    this->left = nullptr;
+    this->right = nullptr;
+};
 
 bool Compare::operator()(HuffmanNode* a, HuffmanNode* b) {
     return a->freq > b->freq;
