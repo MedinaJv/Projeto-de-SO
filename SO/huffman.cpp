@@ -1,5 +1,7 @@
 #include "huffman.h"
 
+const char NULL_MARKER = '\x01';
+
 HuffmanNode::HuffmanNode(char data, int freq){
     this->data = data;
     this->freq = freq;
@@ -13,7 +15,7 @@ bool Compare::operator()(HuffmanNode* a, HuffmanNode* b) {
 
 void serializeTree(HuffmanNode* root, ofstream& out) {
     if (!root) {
-        out.put('#'); // Nó nulo
+        out.put(NULL_MARKER); // Nó nulo
         return;
     }
     out.put(root->data);
@@ -24,7 +26,7 @@ void serializeTree(HuffmanNode* root, ofstream& out) {
 HuffmanNode* deserializeTree(ifstream& in) {
     char ch;
     in.get(ch);
-    if (ch == '#') return nullptr; // Nó nulo
+    if (ch == NULL_MARKER) return nullptr; // Nó nulo
     
     HuffmanNode* node = new HuffmanNode(ch, 0);
     node->left = deserializeTree(in);
