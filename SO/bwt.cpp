@@ -1,56 +1,61 @@
 #include "bwt.h"
+#include "sais.h"          // Inclui a nossa implementação SA-IS
+#include <vector>
+#include <string>
+#include <iostream>
 #include <algorithm>
+using namespace std;
 
+/*
+Implementação geral da transformação de Burrows-Wheeler, visando
+a reordenação de dados de maneira a otimizar a compressão pelo
+algoritmo de Huffman.
+*/
 
-string bwt(const string& input){
-    if(input.empty())
+string bwt(const string& input) {
+    if (input.empty())
         return "";
 
     string markedInput = input + "\x03";
-    size_t n = markedInput.size();
+    int n = markedInput.size();
 
-    vector<size_t> indexes(n);
-    for(size_t i = 0; i < n; ++i)
-        indexes[i] = i;
+    vector<int> s(n);
+    for (int i = 0; i < n; i++) {
+        if (i == n - 1)
+            s[i] = 0;
+        else
+            s[i] = static_cast<int>(markedInput[i]) + 1;
+    }
 
-    auto cmp = [&](size_t i, size_t j) -> bool {
-        for(size_t k = 0; k < n; ++k){
-            char a = markedInput[(i + k) % n];
-            char b = markedInput[(j + k) % n];
-            if(a != b)
-                return a < b;
-        }
+    int K = *max_element(s.begin(), s.end()) + 1;
 
-        return false;
-    };
-
-    sort(indexes.begin(), indexes.end(), cmp);
+    //Implementação do SA_IS aqui
+    vector<int> sa = SAIS::SA_IS(s, K);
 
     string transformed;
     transformed.resize(n);
-
-    for(size_t i = 0; i < n; ++i){
-        size_t idx = indexes[i];
+    for (int i = 0; i < n; i++) {
+        int idx = sa[i];
         transformed[i] = markedInput[(idx + n - 1) % n];
     }
-    cout << "BWT Processado" << endl;
+
+    cout << "BWT Processado com SA-IS." << endl;
     return transformed;
 }
 
-string inverseBwt(const string &bwtStr){
-    if(bwtStr.empty())
+string inverseBwt(const string &bwtStr) {
+    if (bwtStr.empty())
         return "";
 
     size_t n = bwtStr.size();
-
     vector<int> freq(256, 0);
-    for(char c : bwtStr)
+    for (char c : bwtStr)
         freq[static_cast<unsigned char>(c)]++;
 
     vector<int> starts(256, 0);
     int sum = 0;
-    for(int c = 0; c < 256; c++){
-        if(freq[c] != 0){
+    for (int c = 0; c < 256; c++) {
+        if (freq[c] != 0) {
             starts[c] = sum;
             sum += freq[c];
         }
@@ -58,31 +63,29 @@ string inverseBwt(const string &bwtStr){
 
     vector<int> occ(256, 0);
     vector<int> LF(n, 0);
-
-    for(size_t i = 0; i < n; ++i){
+    for (size_t i = 0; i < n; ++i) {
         unsigned char c = bwtStr[i];
         LF[i] = starts[c] + occ[c];
         occ[c]++;
     }
 
     int row = -1;
-    for(size_t i = 0; i < n; i++){
-        if(bwtStr[i] == '\x03'){
+    for (size_t i = 0; i < n; i++) {
+        if (bwtStr[i] == '\x03') {
             row = static_cast<int>(i);
             break;
         }
     }
-    if(row == -1)
+    if (row == -1)
         return "";
 
     string original;
     original.resize(n - 1);
-
-    for(int i = static_cast<int>(n) -2; i >= 0; --i){
+    for (int i = static_cast<int>(n) - 2; i >= 0; --i) {
         row = LF[row];
         original[i] = bwtStr[row];
     }
-    
-    cout << "BWT Reverso Processado" << endl;
+
+    cout << "BWT Inverso Processado." << endl;
     return original;
 }

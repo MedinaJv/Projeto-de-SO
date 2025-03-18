@@ -2,6 +2,12 @@
 #include "bwt.h"
 #include "mtf.h"
 
+/*
+Código de Huffman implementado através da abordagem de árvore de Huffman com
+uso de fila de prioridade para a construção da árvore. O algoritmo é utilizado
+para a compressão de dados após a transformação MTF e BWT.
+*/
+
 const string NULL_MARKER = "<<<NULO>>>";
 
 HuffmanNode::HuffmanNode(char data, int freq){
@@ -98,7 +104,7 @@ void compressFile(const string& inputFile, const string& outputFile) {
     //cout << "MTF: " << mtfText << endl;
     
     unordered_map<char, int> freqMap;
-    
+
     for (char ch : mtfText) {
         freqMap[ch]++;
     }

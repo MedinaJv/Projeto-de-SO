@@ -4,7 +4,7 @@
 
 MAIN := huffman
 
-OBJECTS := main.o huffman.o bwt.o mtf.o
+OBJECTS := main.o huffman.o bwt.o mtf.o sais.o
 DEBUG   := -g
 FLAGS   := -Wall -Wextra -std=c++17 -pedantic-errors $(DEBUG)
 CC      := g++
@@ -35,6 +35,10 @@ bwt.o: bwt.cpp bwt.h
 mtf.o: mtf.cpp mtf.h
 	$(CC) $(FLAGS) -c mtf.cpp
 
+sais.o: sais.cpp sais.h
+	$(CC) $(FLAGS) -c sais.cpp
+
+
 clean:
 	rm -rf $(OBJECTS) $(OUTPUTMAIN)
 	@echo "Cleanup completo!"
@@ -44,3 +48,12 @@ run: all
 	@echo "Compressão completa!"
 	./$(OUTPUTMAIN) D output1.huff exemplo1Huff.txt
 	@echo "Decompressão completa!"
+	./$(OUTPUTMAIN) C exemplo2.txt output2.huff
+	@echo "Compressão completa!"
+	./$(OUTPUTMAIN) D output2.huff exemplo2Huff.txt
+	@echo "Decompressão completa!"
+	./$(OUTPUTMAIN) C exemplo3.txt output3.huff
+	@echo "Compressão completa!"
+	./$(OUTPUTMAIN) D output3.huff exemplo3Huff.txt
+	@echo "Decompressão completa!"
+

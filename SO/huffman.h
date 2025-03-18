@@ -28,4 +28,4 @@ HuffmanNode* buildHuffmanTree(unordered_map<char, int>& freqMap);
 void compressFile(const string& inputFile, const string& outputFile);
 void decompressFile(const string& inputFile, const string& outputFile);
 
-#endif // HUFFMAN_H
+#endif

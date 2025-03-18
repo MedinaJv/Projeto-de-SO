@@ -3,6 +3,12 @@
 #include <iostream>
 #include <string>
 
+/*
+Implementação pós BWT para a transformação Move-to-Front. Visa transformar
+a sequência gerada pelo BWT em uma lista de símbolos mais frequentes. Que
+permite uma compressão mais eficaz pelo código de Huffman
+*/
+
 
 string mtf(const string &input){
     vector <unsigned char> symbols(256);
