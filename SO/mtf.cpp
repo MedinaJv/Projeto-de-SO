@@ -20,6 +20,8 @@ string mtf(const string &input){
         symbols.insert(symbols.begin(), c);
     }
 
+    cout << "MTF Realizado" << endl;
+
     return output;
 }
 
@@ -39,6 +41,8 @@ string inverseMtf(const string& encoded){
         symbols.erase(symbols.begin() + pos);
         symbols.insert(symbols.begin(), c);
     }
+
+    cout << "MTF Reverso Realizado" << endl;
 
     return output;
 }

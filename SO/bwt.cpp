@@ -1,47 +1,88 @@
 #include "bwt.h"
 #include <algorithm>
 
-string bwt(const string& input) {
-    if (input.empty()) return "";
 
-    vector<string> rotations;
-    
-    string markedInput = input + "$"; // Caracter que marca o final da string
-    int n = markedInput.size();
+string bwt(const string& input){
+    if(input.empty())
+        return "";
 
-    for(int i = 0; i < n; i++)
-        rotations.push_back(markedInput.substr(i) + markedInput.substr(0, i));
+    string markedInput = input + "\x03";
+    size_t n = markedInput.size();
 
-    sort(rotations.begin(), rotations.end());
+    vector<size_t> indexes(n);
+    for(size_t i = 0; i < n; ++i)
+        indexes[i] = i;
+
+    auto cmp = [&](size_t i, size_t j) -> bool {
+        for(size_t k = 0; k < n; ++k){
+            char a = markedInput[(i + k) % n];
+            char b = markedInput[(j + k) % n];
+            if(a != b)
+                return a < b;
+        }
+
+        return false;
+    };
+
+    sort(indexes.begin(), indexes.end(), cmp);
 
     string transformed;
+    transformed.resize(n);
 
-    for(const auto& rotation : rotations){
-        transformed += rotation.back();
+    for(size_t i = 0; i < n; ++i){
+        size_t idx = indexes[i];
+        transformed[i] = markedInput[(idx + n - 1) % n];
     }
-
+    cout << "BWT Processado" << endl;
     return transformed;
 }
 
+string inverseBwt(const string &bwtStr){
+    if(bwtStr.empty())
+        return "";
 
-string inverseBwt(const string& bwt){
-    if (bwt.empty()) return "";
-    
-    int n = bwt.size();
-    vector<string> table(n, "");
-    
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
-            table[j] = bwt[j] + table[j];
+    size_t n = bwtStr.size();
+
+    vector<int> freq(256, 0);
+    for(char c : bwtStr)
+        freq[static_cast<unsigned char>(c)]++;
+
+    vector<int> starts(256, 0);
+    int sum = 0;
+    for(int c = 0; c < 256; c++){
+        if(freq[c] != 0){
+            starts[c] = sum;
+            sum += freq[c];
         }
-        sort(table.begin(), table.end());
     }
 
-    for(const auto& row : table){
-        if(!row.empty() && row.back() == '$'){
-            return row.substr(0, row.size() - 1);
+    vector<int> occ(256, 0);
+    vector<int> LF(n, 0);
+
+    for(size_t i = 0; i < n; ++i){
+        unsigned char c = bwtStr[i];
+        LF[i] = starts[c] + occ[c];
+        occ[c]++;
+    }
+
+    int row = -1;
+    for(size_t i = 0; i < n; i++){
+        if(bwtStr[i] == '\x03'){
+            row = static_cast<int>(i);
+            break;
         }
     }
-  
-    return "";
+    if(row == -1)
+        return "";
+
+    string original;
+    original.resize(n - 1);
+
+    for(int i = static_cast<int>(n) -2; i >= 0; --i){
+        row = LF[row];
+        original[i] = bwtStr[row];
+    }
+    
+    cout << "BWT Reverso Processado" << endl;
+    return original;
 }

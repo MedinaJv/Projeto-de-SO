@@ -1,23 +1,24 @@
-
 ##############################################################################
 # huffman.cpp: depende de huffman.h 
 ##############################################################################
 
 MAIN := huffman
 
-OBJECTS := main.o huffman.o
-FLAGS := -Wall -Wextra -std=c++17 -pedantic-errors
-DEBUG := -g
-CC := g++
+OBJECTS := main.o huffman.o bwt.o mtf.o
+DEBUG   := -g
+FLAGS   := -Wall -Wextra -std=c++17 -pedantic-errors $(DEBUG)
+CC      := g++
 
-ifeq ($(OS), Windows_NT)
-OUTPUTMAIN := $(MAIN).exe
+ifeq ($(OS),Windows_NT)
+	OUTPUTMAIN := $(MAIN).exe
 else
-OUTPUTMAIN := $(MAIN).out
+	OUTPUTMAIN := $(MAIN).out
 endif
 
+.PHONY: all clean run
+
 all: $(OUTPUTMAIN)
-	@echo Compiling 'all' completo!
+	@echo "Compilação completa!"
 
 $(OUTPUTMAIN): $(OBJECTS)
 	$(CC) $(FLAGS) $(OBJECTS) -o $(OUTPUTMAIN)
@@ -28,12 +29,18 @@ main.o: main.cpp huffman.h
 huffman.o: huffman.cpp huffman.h
 	$(CC) $(FLAGS) -c huffman.cpp
 
+bwt.o: bwt.cpp bwt.h
+	$(CC) $(FLAGS) -c bwt.cpp
+
+mtf.o: mtf.cpp mtf.h
+	$(CC) $(FLAGS) -c mtf.cpp
+
 clean:
 	rm -rf $(OBJECTS) $(OUTPUTMAIN)
-	@echo Cleanup completo!!!
+	@echo "Cleanup completo!"
 
 run: all
-	./$(OUTPUTMAIN) C input.txt output.huff
-	@echo Compressão completa!!!
-	./$(OUTPUTMAIN) D output.huff output.txt
-	@echo Decompressão completa!!!
+	./$(OUTPUTMAIN) C exemplo1.txt output1.huff
+	@echo "Compressão completa!"
+	./$(OUTPUTMAIN) D output1.huff exemplo1Huff.txt
+	@echo "Decompressão completa!"

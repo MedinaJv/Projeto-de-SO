@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <queue>
 #include <bitset>
+#include <sstream>
 
 using namespace std;
 
