@@ -6,7 +6,7 @@
 using namespace std;
 
 //Implementação de SA-IS (Algoritmo de Indução Sufixo-Autômato)
-//***Implementação adaptada de biblioteca pronta***
+//***Implementação adaptada de biblioteca pronta (libdivsufsort)***
 
 namespace SAIS{
     void getBuckets(const vector<int>& s, int K, vector<int>& bucket, bool end){
