@@ -9,6 +9,6 @@
 using namespace std;
 
 string bwt(const string& input);
-string inverseBwt(const string& bwt);
+string inverseBwt(const string &bwtStr);
 
 #endif
